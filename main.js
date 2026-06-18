@@ -6,6 +6,10 @@
 
 import { Application } from 'https://esm.sh/@splinetool/runtime';
 import Lenis from 'https://esm.sh/lenis';
+import gsap from 'https://esm.sh/gsap';
+import ScrollTrigger from 'https://esm.sh/gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ============================================================
 // SMOOTH SCROLLING (Lenis) & SCROLL-DRIVEN 3D ZOOM
@@ -28,33 +32,28 @@ function initLenisAndScrollEffects() {
   // Make lenis globally accessible for other handlers
   window.lenis = lenis;
 
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
+  // Sync Lenis with GSAP ScrollTrigger
+  lenis.on('scroll', ScrollTrigger.update);
 
-  // Scroll callback for Zoom-to-Black effect
-  lenis.on('scroll', (e) => {
-    const scrollY = window.scrollY || window.pageYOffset;
-    const viewportHeight = window.innerHeight;
-    
-    // Compute scroll progress over the first viewport height
-    const progress = Math.min(Math.max(scrollY / viewportHeight, 0), 1);
-    
-    // 1. Zoom in the 3D canvas (scale from 1.0 to 1.5)
-    const splineCanvas = document.getElementById('spline-canvas');
-    if (splineCanvas) {
-      const scale = 1 + progress * 0.5; // Scales from 1 to 1.5
-      splineCanvas.style.setProperty('--canvas-scale', scale);
-    }
-    
-    // 2. Fade in the dark overlay (opacity from 0 to 1)
-    const darkOverlay = document.getElementById('spline-dark-overlay');
-    if (darkOverlay) {
-      darkOverlay.style.opacity = progress;
-    }
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
   });
+  
+  gsap.ticker.lagSmoothing(0);
+
+  // 1. 3D Canvas Scroll Animation: Zoom in and fade to grey
+  gsap.to('#spline-canvas', {
+    scrollTrigger: {
+      trigger: '.hero',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 1,
+    },
+    scale: 1.5,
+    opacity: 0,
+    ease: 'none'
+  });
+
 }
 
 // ============================================================
@@ -63,7 +62,7 @@ function initLenisAndScrollEffects() {
 function initSpline3D() {
   const canvas = document.getElementById('spline-canvas');
   const loader = document.getElementById('spline-loader');
-  
+
   if (!canvas) {
     console.warn('[Portfolio] Spline canvas not found.');
     return;
@@ -78,12 +77,12 @@ function initSpline3D() {
   }, 6000);
 
   const spline = new Application(canvas);
-  
+
   spline.load('https://prod.spline.design/2LMNhlZccuyiAkmo/scene.splinecode')
     .then(() => {
       console.log('[Portfolio] Spline 3D background loaded successfully.');
       clearTimeout(timeoutId);
-      
+
       // Hide loader overlay
       if (loader) {
         loader.classList.add('fade-out');
@@ -97,7 +96,7 @@ function initSpline3D() {
     .catch((error) => {
       console.error('[Portfolio] Failed to load Spline scene:', error);
       clearTimeout(timeoutId);
-      
+
       // Fallback: hide loader so user can see the website
       if (loader) {
         loader.classList.add('fade-out');
