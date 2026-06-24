@@ -41,17 +41,20 @@ function initLenisAndScrollEffects() {
 
   gsap.ticker.lagSmoothing(0);
 
-  // 1. 3D Canvas Scroll Animation: Zoom in and fade to grey
-  gsap.to('#spline-canvas', {
-    scrollTrigger: {
-      trigger: '.hero',
-      start: 'top top',
-      end: 'bottom top',
-      scrub: 1,
-    },
-    scale: 1.5,
-    opacity: 0,
-    ease: 'none'
+  // 1. 3D Canvas Scroll Animation: Zoom in and fade to grey (Desktop only)
+  let mm = gsap.matchMedia();
+  mm.add("(min-width: 768px)", () => {
+    gsap.to('#spline-canvas', {
+      scrollTrigger: {
+        trigger: '.hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1,
+      },
+      scale: 1.5,
+      opacity: 0,
+      ease: 'none'
+    });
   });
 
 }

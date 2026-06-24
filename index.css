@@ -127,13 +127,13 @@ button {
 
 @media (min-width: 768px) {
   #spline-bg canvas {
-    --canvas-translate-x: 10%;
+    --canvas-translate-x: 5%;
   }
 }
 
 @media (min-width: 1024px) {
   #spline-bg canvas {
-    --canvas-translate-x: 15%;
+    --canvas-translate-x: 10%;
   }
 }
 
@@ -1189,5 +1189,29 @@ button {
     text-align: center;
     width: 100%;
     justify-content: space-between;
+  }
+
+  /* Separate space below text for 3D Asset on mobile */
+  #spline-bg {
+    position: relative !important;
+    width: 100% !important;
+    height: 400px !important;
+    margin-bottom: 60px !important;
+    top: 0 !important;
+    left: 0 !important;
+    pointer-events: auto !important;
+    z-index: 10 !important;
+    overflow: hidden !important;
+  }
+
+  #spline-bg canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
   }
 }
