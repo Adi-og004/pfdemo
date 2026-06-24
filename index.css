@@ -127,13 +127,13 @@ button {
 
 @media (min-width: 768px) {
   #spline-bg canvas {
-    --canvas-translate-x: 5%;
+    --canvas-translate-x: 10%;
   }
 }
 
 @media (min-width: 1024px) {
   #spline-bg canvas {
-    --canvas-translate-x: 10%;
+    --canvas-translate-x: 15%;
   }
 }
 
