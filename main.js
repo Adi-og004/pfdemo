@@ -38,7 +38,7 @@ function initLenisAndScrollEffects() {
   gsap.ticker.add((time) => {
     lenis.raf(time * 1000);
   });
-  
+
   gsap.ticker.lagSmoothing(0);
 
   // 1. 3D Canvas Scroll Animation: Zoom in and fade to grey
